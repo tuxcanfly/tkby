@@ -1,0 +1,14 @@
+package: github.com/tuxcanfly/tkby
+import:
+- package: github.com/decred/dcrwallet
+  vcs: git
+  version: loader-ticketbuyer
+  repo: https://github.com/tuxcanfly/btcwallet
+  subpackages:
+  - rpc/walletrpc
+- package: golang.org/x/net
+  subpackages:
+  - context
+- package: google.golang.org/grpc
+  subpackages:
+  - credentials
