@@ -5,7 +5,6 @@ import (
 	"log"
 	"time"
 
-	"github.com/decred/dcrutil"
 	pb "github.com/decred/dcrwallet/rpc/walletrpc"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
@@ -51,7 +50,7 @@ func main() {
 	}
 	defer conn.Close()
 
-	client := pb.NewTicketBuyerServiceClient(conn)
+	client := pb.NewWalletLoaderServiceClient(conn)
 
 	log.Printf("Starting ticket buyer")
 	_, err = client.StartTicketPurchase(context.Background(), &pb.StartTicketPurchaseRequest{
@@ -65,22 +64,6 @@ func main() {
 	if err != nil {
 		log.Fatalf("rpc err: %v", err)
 	}
-
-	log.Printf("fetching config")
-	config, err := client.Config(context.Background(), &pb.TicketBuyerConfigRequest{})
-	if err != nil {
-		log.Fatalf("rpc err: %v", err)
-	}
-	log.Printf("=== Ticket buyer config ==")
-	log.Printf("account: %v", config.AccountName)
-	log.Printf("balance to maintain: %v", dcrutil.Amount(config.BalanceToMaintain).ToCoin())
-	log.Printf("max fee: %v", dcrutil.Amount(config.MaxFee).ToCoin())
-	log.Printf("max per block: %v", config.MaxPerBlock)
-	log.Printf("max price absolute: %v", dcrutil.Amount(config.MaxPriceAbsolute).ToCoin())
-	log.Printf("max price relative: %v", config.MaxPriceRelative)
-	log.Printf("pool address: %v", config.PoolAddress)
-	log.Printf("pool fees: %v", config.PoolFees)
-	log.Printf("ticket address: %v", config.TicketAddress)
 
 	log.Printf("Purchasing for %vs", *wait)
 	time.Sleep(time.Duration(*wait) * time.Second)
