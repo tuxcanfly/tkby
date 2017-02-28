@@ -18,7 +18,7 @@ var (
 	caFile     = flag.String("ca_file", "rpc.cert", "The file containning the CA root cert file")
 	serverAddr = flag.String("server_addr", "127.0.0.1:19110", "The server address in the format of host:port")
 
-	accountName   = flag.String("account", "", "Account to purchase from")
+	accountName   = flag.String("account", "default", "Account to purchase from")
 	finalBalance  = flag.Float64("balance", 0, "Balance to maintain")
 	maxPrice      = flag.Float64("maxprice", 0, "Max ticket price")
 	maxFee        = flag.Float64("maxfee", 0, "Max ticket fee")
@@ -59,7 +59,9 @@ func main() {
 		BalanceToMaintain: int64(*finalBalance * 1e8),
 		MaxFee:            int64(*maxFee * 1e8),
 		MaxPriceAbsolute:  int64(*maxPrice * 1e8),
+		MaxPriceRelative:  float64(1.25),
 		TicketAddress:     *ticketAddress,
+		MaxPerBlock:       5,
 	})
 	if err != nil {
 		log.Fatalf("rpc err: %v", err)
